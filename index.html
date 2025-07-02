@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta lang="ka">
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="browser-sim.css">
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<h1>Tiny Browser Simulator</h1>
+
+		<p>
+		While working at <a href="https://ncer.gov.ge">NCER</a>, there came a need
+		for a <i>tiny</i> and light weight <i>browser simulator</i> built with
+		<a href="https://en.wikipedia.org/wiki/HTML">HTML</a>,
+		<a href="https://en.wikipedia.org/wiki/CSS">CSS</a>, and
+		<a href="https://en.wikipedia.org/wiki/JavaScript">Javascript</a>
+		which would support a very small subset of the modern browsers' features.
+		</p>
+
+		<p>
+		Now, of course, I had to do it all manually &ndash; no LLMs, no frameworks
+		(other than browsers, obviously). I knew that it would take no more than ~100
+		lines of Javascript and about the same of CSS. I had sketched out the idea of
+		how I wanted it to function a few days back, which is the single best thing I
+		usually do when working on projects. Having an outline of work is super useful.
+		</p>
+
+		<h2>The Goal</h2>
+
+		<p>
+		There were a couple crucial features that I needed the simulator to support:
+		</p>
+
+		<ol>
+			<li>Tabs (functional) and</li>
+			<li>internal navigation using hyperlinks.</li>
+		</ol>
+
+		The idea is that the simulator should start with a single (or multiple) tabs
+		open and then the user should be able to click the links inside the simulated
+		page to summon new tabs. Then the user should be able to switch to tabs.
+
+		<h2>The Interface</h2>
+
+		<p>
+		As the html code for the simulator will need to be generated via a 
+		<a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, it
+		needs to be very simple so that implementing the generation is not too painful.
+		I had a few different ideas of the way the HTML could look but I settled on
+		what I think is best (why wouldn't I): Have a single <code>&lt;browser-sim&gt;
+		</code> element and nest different <code>&lt;browser-page&gt;</code> elements
+		containing the content, the title, and the url of each page.
+		</p>
+
+		<p>
+		This way, the code would be super easy to generate and also read and modify
+		by hand if necessary. It would literally be different elements for different
+		pages, can't get any simpler than that.
+		</p>
+
+		<h2>The Execution</h2>
+		
+		<p>
+		As you might have suspected, this is exactly what it turned out to be like.
+		Here's some example code:
+		</p>
+
+		<pre><code id="example-1-source"></code></pre>
+
+		And here's what it looks like running:
+
+<browser-sim id="example-1">
+	<browser-page title="Welcome" url="brow.ser">
+		<h1>Hello!</h1>
+		<p>
+		This is a lesson about clicking links. Clicking 
+		<browser-link to="dark.web">this link</browser-link>
+		will take you to a dark place. Or
+		<browser-link to="youtu.be/dQw4w9WgXcQ">this one</browser-link>
+		for eternal salvation.
+		</p>
+	</browser-page>
+	
+	<browser-page title="The Dark Web" url="dark.web">
+		<h1>This is not the dark web</h1>
+		<p>
+		Hahaha! Just kidding, this is not really the dark web. Follow 
+		<browser-link to="youtu.be/dQw4w9WgXcQ">this link</browser-link>.
+		</p>
+	</browser-page>
+
+	<browser-page title="a good place to be" url="youtu.be/dQw4w9WgXcQ">
+		<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+	</browser-page>
+</browser-sim>
+
+		<!-- <p> -->
+		<!-- The way it works is quite simple. I've defined  -->
+		<!-- </p> -->
+
+
+
+		
+		<script src="script.js" preload="true"></script>
+		<script src="browser-sim.js" preload="true"></script>
+	</body>
+</html>

@@ -1,0 +1,74 @@
+browser-sim {
+	border: 1px solid #ddd;
+	display: block;
+	position: relative;
+
+	font-family: arial, sans-serif;
+
+	& .header {
+		background-color: #ddd;
+		box-sizing: border-box;
+		padding-bottom: 2px;
+
+		& .tabs {
+			background-color: white;
+			padding: 3px 3px 0 3px;
+
+			& .tab {
+				border: none;
+				padding: 4px 10px;
+				background: white;
+				cursor: pointer;
+
+				&.current {
+					background-color: #ddd;
+					border-radius: 4px 4px 0 0;
+				}
+
+				&:not(.current) {
+					&+& {
+						margin-left: 0;
+						box-sizing: border-box;
+						border-left: 1px solid #ddd;
+					}
+				}
+
+				&+& {
+					margin-left: 1px;
+				}
+			}
+		}
+
+		& .url {
+			background-color: white;
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			margin: 2px;
+			margin-bottom: 0;
+			padding: 2px 0.5rem;
+		}
+	}
+
+	& .pages {
+		padding: 10px;
+
+		aspect-ratio: 16 / 9;
+		overflow-y: scroll;
+
+		& browser-page {
+			display: block;
+			position: relative;
+			box-sizing: border-box;
+
+			&:not(.current) {
+				display: none;
+			}
+
+			& browser-link {
+				color: blue;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+		}
+	}
+}
