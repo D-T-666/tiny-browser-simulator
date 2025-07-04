@@ -4,6 +4,7 @@ body {
 
 	& p {
 		text-align: justify;
+		font-size: 1rem;
 	}
 
 	& pre {
@@ -12,6 +13,7 @@ body {
 		background-color: #eee;
 		border-radius: 3px;
 		margin: 1rem 0;
+		tab-size: 4;
 	}
 
 	& iframe {
@@ -25,5 +27,60 @@ body {
 		box-shadow: 0 0.1rem 0.35rem #eee;
 		border-radius: 5px;
 		overflow: hidden;
+	}
+	
+	& ins {
+		display: inline;
+		/* display: inline-block; */
+		text-decoration: none;
+		/* position: relative; */
+	}
+
+	& del {
+		background-color: #fbb;
+	}
+
+	& ins {
+		background-color: #d4fcbc;
+	}
+
+	& .split {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+
+		& > * {
+			box-sizing: border-box;
+
+			&+& {
+				margin-left: 10px;
+			}
+		}
+	}
+}
+
+footer {
+	text-align: right;
+}
+
+/**/
+
+#e1p1 {
+	padding: 0;
+	& h1 {
+		background-color: black;
+		color: white;
+		padding: 0.5rem 1rem;
+		margin: 0;
+	}
+
+	& p {
+		padding: 0 10px;
+	}
+}
+
+#e1p3 {
+	& p:nth-child(2) {
+		margin-top: 10000px;
 	}
 }

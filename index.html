@@ -26,82 +26,258 @@
 		usually do when working on projects. Having an outline of work is super useful.
 		</p>
 
-		<h2>The Goal</h2>
+		<section>
+			<h2>The Goal</h2>
 
-		<p>
-		There were a couple crucial features that I needed the simulator to support:
-		</p>
+			<p>
+			There were a few crucial features that I needed the simulator to support:
+			</p>
 
-		<ol>
-			<li>Tabs (functional) and</li>
-			<li>internal navigation using hyperlinks.</li>
-		</ol>
+			<ol>
+				<li>Tabs (functional),</li>
+				<li>internal navigation using hyperlinks, and</li>
+				<li>external incoming links.</li>
+			</ol>
 
-		The idea is that the simulator should start with a single (or multiple) tabs
-		open and then the user should be able to click the links inside the simulated
-		page to summon new tabs. Then the user should be able to switch to tabs.
+			The idea is that the simulator should start with a single (or multiple) tabs
+			open and then the user should be able to click the links inside the simulated
+			page to navigate to or summon new tabs. Then the user should be able to close
+			the tabs tabs if they want to, howver there should be at least one tab that
+			is not closable, as to not lose all links.
+		</section>
 
-		<h2>The Interface</h2>
+		<section>
+			<h2>The Interface</h2>
 
-		<p>
-		As the html code for the simulator will need to be generated via a 
-		<a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, it
-		needs to be very simple so that implementing the generation is not too painful.
-		I had a few different ideas of the way the HTML could look but I settled on
-		what I think is best (why wouldn't I): Have a single <code>&lt;browser-sim&gt;
-		</code> element and nest different <code>&lt;browser-page&gt;</code> elements
-		containing the content, the title, and the url of each page.
-		</p>
+			<p>
+			As the html code for the simulator will need to be generated via a 
+			<a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, it
+			needs to be very simple so that implementing the generation is not too painful.
+			I had a few different ideas of the way the HTML could look but I settled on
+			what I think is best (why wouldn't I): Have a single <code>&lt;browser-sim&gt;
+			</code> element and nest different <code>&lt;browser-page&gt;</code> elements
+			containing the content, the title, and the url of each page.
+			</p>
 
-		<p>
-		This way, the code would be super easy to generate and also read and modify
-		by hand if necessary. It would literally be different elements for different
-		pages, can't get any simpler than that.
-		</p>
+			<p>
+			This way, the code would be super easy to generate and also read and modify
+			by hand if necessary. It would literally be different elements for different
+			pages, can't get any simpler than that.
+			</p>
+		</section>
 
-		<h2>The Execution</h2>
-		
-		<p>
-		As you might have suspected, this is exactly what it turned out to be like.
-		Here's some example code:
-		</p>
+		<section>
+			<h2>The Execution</h2>
 
-		<pre><code id="example-1-source"></code></pre>
+			<p>
+			As you might have suspected, this is exactly what it turned out to be like.
+			Here's some example code:
+			</p>
 
-		And here's what it looks like running:
+			<pre><code id="example-1-source"></code></pre>
+
+			And to see what it looks like running, click
+			<browser-link browser="example-1" to="www.welcome.com">this link</browser-link>
 
 <browser-sim id="example-1">
-	<browser-page title="Welcome" url="brow.ser">
+	<browser-page title="Welcome" url="www.welcome.com" id="e1p1">
 		<h1>Hello!</h1>
 		<p>
-		This is a lesson about clicking links. Clicking 
-		<browser-link to="dark.web">this link</browser-link>
-		will take you to a dark place. Or
-		<browser-link to="youtu.be/dQw4w9WgXcQ">this one</browser-link>
-		for eternal salvation.
+		This is a page about clicking links. Click
+		<browser-link to="www.welcome.com/page1">this link</browser-link>
+		to go to another page. Alternatively, click
+		<browser-link to="www.welcome.com/page2">this one</browser-link>
+		to go to <i>yet another</i> page.
 		</p>
 	</browser-page>
 	
-	<browser-page title="The Dark Web" url="dark.web">
-		<h1>This is not the dark web</h1>
+	<browser-page title="a breautiful page" url="www.welcome.com/page1">
+		<h1>This is not dark-background header</h1>
 		<p>
-		Hahaha! Just kidding, this is not really the dark web. Follow 
-		<browser-link to="youtu.be/dQw4w9WgXcQ">this link</browser-link>.
+		you migth notice that both this one and the first page use the same
+		<code>&lt;h1&gt;</code> tag but this one has no black background.
+		That is because you can inidividually assign styles to different pages
+		simply by giving them their own <code>id</code>s.
+		</p>
+		<p>
+		Now, to open <i>yet another</i> page, click
+		<browser-link to="www.welcome.com/page2">this link</browser-link>.
 		</p>
 	</browser-page>
 
-	<browser-page title="a good place to be" url="youtu.be/dQw4w9WgXcQ">
-		<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+	<browser-page title="a tall page" url="www.welcome.com/page2" id="e1p3">
+		<h1>Scroll down</h1>
+		<p>you had to scroll sooo far for what, this?</p>
+		<p><browser-link to="www.welcome.com">
+			go back to the first page</browser-link>.</p>
 	</browser-page>
 </browser-sim>
 
-		<!-- <p> -->
-		<!-- The way it works is quite simple. I've defined  -->
-		<!-- </p> -->
+			<p>
+			The way it works is quite simple. I've defined three
+			<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements">
+				(autonomous) custom elemnts</a>:
+			</p>
 
+			<ol>
+				<li><code>&lt;browser-sim&gt;</code> &ndash; the main container</li> 
+				<li><code>&lt;browser-page&gt;</code> &ndash; the page container</li> 
+				<li><code>&lt;browser-link&gt;</code> &ndash; the link to a different browser page</li> 
+			</ol>
 
+			<h3>Component <code>&lt;browser-sim&gt;</code></h3>
 
+			<p>
+			This is the main component. It expects (but does not check) to have only
+			<code>&lt;browser-page&gt;</code> components as children. When the component
+			gets connected, it changes its shape in the following way:
+			</p>
+
+			<div class="split">
+				<pre><code>&lt;browser-sim&gt;
+	&lt;browser-page&gt;&lt;/browser-page&gt;
+	&lt;browser-page&gt;&lt;/browser-page&gt;
+	&lt;browser-page&gt;&lt;/browser-page&gt;
+&lt;/browser-sim&gt;</code></pre>
+			<pre><code>&lt;browser-sim&gt; <ins>
+	&lt;div class="header"&gt;
+		&lt;div class="tabs"&gt;&lt;/div&gt;
+		&lt;div class="url"&gt;&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div class="pages"&gt;
+	</ins>	&lt;browser-page&gt;&lt;/browser-page&gt;<ins>
+	</ins>	&lt;browser-page&gt;&lt;/browser-page&gt;<ins>
+	</ins>	&lt;browser-page&gt;&lt;/browser-page&gt;<ins>
+	&lt;/div&gt;</ins>
+&lt;/browser-sim&gt;</code></pre>
+			</div>
+
+			And then a few state-trackers get set up so that we know
+			<ul>
+				<li>which pages have their tabs displayed and</li>
+				<li>which page is displayed currently.</li>
+			</ul>
+
+			<h3>Component <code>&lt;browser-page&gt;</code></h3>
+
+			This component is basically just a div, but with a better name.
+
+			<h3>Component <code>&lt;browser-link&gt;</code></h3>
+
+			<p>
+			This component looks like the ordinary 
+			<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a">
+				anchor element</a>
+			and also kinda acts like it (in the sense that it links to <i>browser pages</i>).
+			</p>
+
+			<p>
+			When this component is connected, it looks for the target browser
+			<code>&lt;browser-sim&gt;</code>. After that, it will make the target
+			browser display the url specified by the <code>to</code> attribute by calling
+			</p>
+
+			<center><code>this.targetBrowser.showPage(this.getAttribute("to"))</code>.</center>
+
+			<p>
+			The interesting part of this component is the looking for the target browser.
+			We don't want to always have to manually specify the id of the target browser's
+			element. That is, when a <code>&lt;browser-link&gt;</code> is inside a 
+			<code>&lt;browser-sim&gt;</code>, we can infer that it is targeting that
+			containing browser (unless explicitly stated otherwise). This is achieved by
+			traversing the path to the root of the
+			<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">DOM</a>
+			tree and stopping at the first object with the property
+			</p>
+
+			<center><code>element.tagName === "BROWSER-SIM"</code>.</center>
+
+			<p>
+			Now obviously, this whole traversal should not be done if the
+			<code>&lt;browser-link&gt;</code> has the property <code>browser</code>
+			set to something.
+			</p>
+
+		</section>
+
+		<section>
+			<h2>Fun Stuff</h2>
+
+			<h3>Nesting</h3>
+			<p>
+			In fact, we can also do nested browsers! :DDD
+			</p>
+
+			<browser-sim>
+				<browser-page title="outer page 1" url="website.com/1" visible>
+					<browser-sim>
+						<browser-page title="inner 1" url="website.com/1/1" visible>
+							<h1>This is page A</h1>
+						</browser-page>
+						<browser-page title="inner 2" url="website.com/1/2" visible>
+							<h1>This is page B</h1>
+						</browser-page>
+					</browser-sim>
+				</browser-page>
+				<browser-page title="outer page 2" url="website.com/2" visible>
+					<p>some pre-text...</p>
+					<browser-sim>
+						<browser-page title="inner 1" url="website.com/2/1" visible>
+							<h1>This is page C</h1>
+						</browser-page>
+						<browser-page title="inner 2" url="website.com/2/2" visible>
+							<h1>This is page D</h1>
+						</browser-page>
+					</browser-sim>
+				</browser-page>
+			</browser-sim>
+
+			<h3>Overflowing Tabs</h3>
+			
+			<p>
+			The following browser has too many tabs open.
+			</p>
+
+			<browser-sim>
+				<browser-page title="page 0 title" url="0" visible></browser-page>
+				<browser-page title="page 1 title" url="1" visible></browser-page>
+				<browser-page title="page 2 title" url="2" visible></browser-page>
+				<browser-page title="page 3 title" url="3" visible></browser-page>
+				<browser-page title="page 4 title" url="4" visible></browser-page>
+				<browser-page title="page 5 title" url="5" visible></browser-page>
+				<browser-page title="page 6 title" url="6" visible></browser-page>
+				<browser-page title="page 7 title" url="7" visible></browser-page>
+				<browser-page title="page 8 title" url="8" visible></browser-page>
+				<browser-page title="page 9 title" url="9" visible></browser-page>
+				<browser-page title="page a title" url="a" visible></browser-page>
+				<browser-page title="page b title" url="b" visible></browser-page>
+				<browser-page title="page c title" url="c" visible></browser-page>
+				<browser-page title="page d title" url="d" visible></browser-page>
+				<browser-page title="page e title" url="e" visible></browser-page>
+				<browser-page title="page f title" url="f" visible></browser-page>
+			</browser-sim>
+
+			<p>
+			This looks very bad, and it should probably be handled properly, but...
+			who cares? We're proper human beings! We will never have too may tabs
+			open! (right?)
+			</p>
+		</section>
+
+		<section>
+			<h2>Conclusion</h2>
+
+			<p>
+			This simple and stale article is my first. I don't even hope that you
+			enjoyed it, but I do hope that you see the spirit behind it (that, you
+			may enjoy :)). I intended it to be a fun look at a small thing I made.
+			</p>
+		</section>
 		
+		<footer>
+			Dimitri Tabatadze, 04.07.2025
+		</footer>
+
 		<script src="script.js" preload="true"></script>
 		<script src="browser-sim.js" preload="true"></script>
 	</body>

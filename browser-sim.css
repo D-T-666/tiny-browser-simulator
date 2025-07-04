@@ -5,57 +5,85 @@ browser-sim {
 
 	font-family: arial, sans-serif;
 
-	& .header {
-		background-color: #ddd;
+	&:has(.tab) .header {
 		box-sizing: border-box;
-		padding-bottom: 2px;
 
 		& .tabs {
-			background-color: white;
 			padding: 3px 3px 0 3px;
 
 			& .tab {
-				border: none;
 				padding: 4px 10px;
 				background: white;
-				cursor: pointer;
+				box-sizing: border-box;
+				display: inline-block;
+				border-radius: 4px 4px 0 0;
+				position: relative;
 
-				&.current {
-					background-color: #ddd;
-					border-radius: 4px 4px 0 0;
-				}
+				& button {
+					background: none;
+					border: none;
+					padding: 0;
 
-				&:not(.current) {
-					&+& {
-						margin-left: 0;
-						box-sizing: border-box;
-						border-left: 1px solid #ddd;
+					& + & {
+						margin-left: 6px;
+						color: gray;
+
+						&:hover {
+							color: black;
+						}
 					}
 				}
 
-				&+& {
-					margin-left: 1px;
+				&.current {
+					background-color: #ddd;
+				}
+
+				&:not(.current) {
+					&+&::before {
+						content: "";
+						display: block;
+						position: absolute;
+						width: 1px;
+						height: 1.4rem;
+						background-color: #ddd;
+						left: 0;
+						top: 4px;
+					}
+
+					&:hover {
+						background-color: #eee;
+					}
 				}
 			}
 		}
 
 		& .url {
 			background-color: white;
-			border: 1px solid #ddd;
-			border-radius: 3px;
-			margin: 2px;
+			border: 3px solid #ddd;
 			margin-bottom: 0;
 			padding: 2px 0.5rem;
 		}
 	}
 
-	& .pages {
-		padding: 10px;
-
+	&:has(.tab) .pages {
 		aspect-ratio: 16 / 9;
-		overflow-y: scroll;
+	}
+
+	&:not(:has(.tab)) .pages {
+		&::before {
+			display: block;
+			content: "browser";
+			color: gray;
+			width: fit-content;
+			margin: auto;
+		}
+	}
+
+	& .pages {
+		overflow-y: auto;
 
 		& browser-page {
+			padding: 10px;
 			display: block;
 			position: relative;
 			box-sizing: border-box;
@@ -63,12 +91,12 @@ browser-sim {
 			&:not(.current) {
 				display: none;
 			}
-
-			& browser-link {
-				color: blue;
-				cursor: pointer;
-				text-decoration: underline;
-			}
 		}
 	}
+}
+
+browser-link {
+	color: blue;
+	cursor: pointer;
+	text-decoration: underline;
 }

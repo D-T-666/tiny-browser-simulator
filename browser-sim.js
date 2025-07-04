@@ -1,75 +1,138 @@
 class BrowserSim extends HTMLElement {
 	constructor() {
 		super()
+	}
+
+	connectedCallback() {
+		/// Create static sub-elements
+		
+		this.tabs = document.createElement("div");
+		this.tabs.classList.add("tabs");
+
+		this.urlBar = document.createElement("div");
+		this.urlBar.classList.add("url");
 
 		const header = document.createElement("div");
 		header.classList.add("header");
 
-		const tabs = document.createElement("div");
-		tabs.classList.add("tabs");
+		header.append(this.tabs, this.urlBar);
 
-		const url = document.createElement("div");
-		url.classList.add("url");
-
-		header.appendChild(tabs);
-		header.appendChild(url);
-
-		const pages = document.createElement("div");
-		pages.classList.add("pages");
-		pages.innerHTML = this.innerHTML;
-
+		this.pages = document.createElement("div");
+		this.pages.classList.add("pages");
+		this.pages.innerHTML = this.innerHTML;
 		this.innerHTML = "";
-		this.appendChild(header);
-		this.appendChild(pages);
 
-		const pagesByURL = {};
-		for (const page of pages.children) {
-			pagesByURL[page.getAttribute("url")] = page;
+		this.append(header, this.pages);
+
+		/// Create dynamic sub-elements
+
+		this.pagesByURL = {};
+		for (const page of this.pages.children) {
+			this.pagesByURL[page.getAttribute("url")] = page;
 		}
 
-		const visibleTabs = {};
-		let currentPage = undefined;
+		console.log(this.pagesByURL)
 
-		function showPage(u) {
-			if (currentPage !== undefined) {
-				pagesByURL[currentPage].classList.remove("current");
-				visibleTabs[currentPage].classList.remove("current");
-			}
+		this.visibleTabs = {};
+		this.currentPageUrl = undefined;
 
-			currentPage = u;
-			pagesByURL[currentPage].classList.add("current");
-
-			if (visibleTabs[pagesByURL[currentPage].getAttribute("url")] === undefined) {
-				const tab = document.createElement("button");
-				tab.classList.add("tab");
-				tab.innerText = pagesByURL[currentPage].getAttribute("title");
-				tab.addEventListener("click", (e) => showPage(u));
-				tabs.appendChild(tab);
-				visibleTabs[currentPage] = tab;
-			}
-
-			visibleTabs[currentPage].classList.add("current");
-
-			url.innerText = `https://${pagesByURL[currentPage].getAttribute("url")}`;
-		}
-
-		for (const page of pages.children) {
-			page.addEventListener("click", (e) => {
-				if (e.target.tagName === "BROWSER-LINK") {
-					e.preventDefault();
-					
-					showPage(e.target.getAttribute("to"));
+		let blank = true;
+		for (const child of this.pages.children) {
+			if (child.getAttribute("visible") !== null) {
+				this.createTab(child.getAttribute("url"))
+				if (blank) {
+					this.showPage(child.getAttribute("url"))
+					blank = false;
 				}
-			})
+			}
+		}
+	}
+
+	showPage(u) {
+		if (this.currentPageUrl !== undefined) {
+			this.pagesByURL[this.currentPageUrl].classList.remove("current");
+			if (this.visibleTabs[this.currentPageUrl]) {
+				this.visibleTabs[this.currentPageUrl].classList.remove("current");
+			}
 		}
 
-		showPage(pages.children[0].getAttribute("url"));
+		this.pagesByURL[u].classList.add("current");
+
+		if (this.visibleTabs[u] === undefined) {
+			this.createTab(u);
+		}
+
+		this.visibleTabs[u].classList.add("current");
+
+		this.urlBar.innerText = `https://${u}`;
+		this.currentPageUrl = u;
+	}
+
+	createTab(u) {
+		const tab = document.createElement("span");
+		tab.classList.add("tab");
+
+		const open = document.createElement("button");
+		open.innerText = this.pagesByURL[u].getAttribute("title");
+		open.addEventListener("click", (e) => this.showPage(u));
+		tab.appendChild(open);
+
+		if (this.pagesByURL[u].getAttribute("nonclosable") === null) {
+			const close = document.createElement("button");
+			close.innerHTML = "&#10005;";
+			close.addEventListener("click", (e) => {
+				this.visibleTabs[u].remove();
+				delete this.visibleTabs[u];
+
+				if (this.currentPageUrl !== u) return;
+
+				this.pagesByURL[u].classList.remove("current")
+				this.currentPageUrl = undefined;
+				this.urlBar.innerText = "";
+
+				if (Object.keys(this.visibleTabs).length > 0) {
+					const url = Object.keys(this.visibleTabs)[0];
+					this.showPage(url);
+				}
+			});
+
+			tab.appendChild(close);
+		}
+
+		this.tabs.appendChild(tab);
+		this.visibleTabs[u] = tab;
 	}
 }
 
-class BrowserLink extends HTMLButtonElement {
+class BrowserLink extends HTMLElement {
 	constructor() {
-		super()
+		super();
+
+		this.addEventListener("click", this.click);
+	}
+
+	connectedCallback() {
+		const targetBrowserId = this.getAttribute("browser");
+
+		if (targetBrowserId !== null) {
+			this.targetBrowser = document.getElementById(targetBrowserId);
+		} else {
+			let parent = this;
+
+			while (parent.parentElement) {
+				parent = parent.parentElement;
+
+				if (parent.tagName === "BROWSER-SIM") {
+					this.targetBrowser = parent;
+					break;
+				}
+			}
+		}
+	}
+
+	click(event) {
+		this.targetBrowser.showPage(this.getAttribute("to"))
+		this.targetBrowser.scrollIntoView({ block: "nearest", behavior: "smooth" });
 	}
 }
 
@@ -79,8 +142,7 @@ class BrowserPage extends HTMLElement {
 	}
 }
 
-
 customElements.define("browser-sim", BrowserSim);
 customElements.define("browser-link", BrowserLink);
-customElements.define("browser-page", BrowserPage, { extends: "div" });
+customElements.define("browser-page", BrowserPage);
 
