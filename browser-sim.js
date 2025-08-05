@@ -1,3 +1,5 @@
+import "./browser-sim.css"
+
 class BrowserSim extends HTMLElement {
 	constructor() {
 		super()
@@ -5,7 +7,7 @@ class BrowserSim extends HTMLElement {
 
 	connectedCallback() {
 		/// Create static sub-elements
-		
+
 		this.tabs = document.createElement("div");
 		this.tabs.classList.add("tabs");
 
@@ -145,4 +147,3 @@ class BrowserPage extends HTMLElement {
 customElements.define("browser-sim", BrowserSim);
 customElements.define("browser-link", BrowserLink);
 customElements.define("browser-page", BrowserPage);
-
