@@ -50,7 +50,7 @@
 			<h2>The Interface</h2>
 
 			<p>
-			As the html code for the simulator will need to be generated via a 
+			As the html code for the simulator will need to be generated via a
 			<a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, it
 			needs to be very simple so that implementing the generation is not too painful.
 			I had a few different ideas of the way the HTML could look but I settled on
@@ -90,7 +90,7 @@
 		to go to <i>yet another</i> page.
 		</p>
 	</browser-page>
-	
+
 	<browser-page title="a breautiful page" url="www.welcome.com/page1">
 		<h1>This is not a dark-background header</h1>
 		<p>
@@ -121,9 +121,9 @@
 			</p>
 
 			<ol>
-				<li><code>&lt;browser-sim&gt;</code> &ndash; the main container</li> 
-				<li><code>&lt;browser-page&gt;</code> &ndash; the page container</li> 
-				<li><code>&lt;browser-link&gt;</code> &ndash; the link to a different browser page</li> 
+				<li><code>&lt;browser-sim&gt;</code> &ndash; the main container</li>
+				<li><code>&lt;browser-page&gt;</code> &ndash; the page container</li>
+				<li><code>&lt;browser-link&gt;</code> &ndash; the link to a different browser page</li>
 			</ol>
 
 			<h3>Component <code>&lt;browser-sim&gt;</code></h3>
@@ -166,7 +166,7 @@
 			<h3>Component <code>&lt;browser-link&gt;</code></h3>
 
 			<p>
-			This component looks like the ordinary 
+			This component looks like the ordinary
 			<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a">
 				anchor element</a>
 			and also kinda acts like it (in the sense that it links to <i>browser pages</i>).
@@ -183,7 +183,7 @@
 			<p>
 			The interesting part of this component is the looking for the target browser.
 			We don't want to always have to manually specify the id of the target browser's
-			element. That is, when a <code>&lt;browser-link&gt;</code> is inside a 
+			element. That is, when a <code>&lt;browser-link&gt;</code> is inside a
 			<code>&lt;browser-sim&gt;</code>, we can infer that it is targeting that
 			containing browser (unless explicitly stated otherwise). This is achieved by
 			traversing the path to the root of the
@@ -234,7 +234,7 @@
 			</browser-sim>
 
 			<h3>Overflowing Tabs</h3>
-			
+
 			<p>
 			The following browser has too many tabs open, with each having literally
 			no value.
@@ -275,12 +275,12 @@
 			may enjoy :)). I intended it to be a fun look at a small thing I made.
 			</p>
 		</section>
-		
+
 		<footer>
 			<a href="dimitri.ge">Dimitri Tabatadze</a>, 04.07.2025
 		</footer>
 
-		<script src="script.js" preload="true"></script>
-		<script src="browser-sim.js" preload="true"></script>
+		<script src="bundle.js" preload="true"></script>
+		<!-- <script src="browser-sim.js" preload="true"></script> -->
 	</body>
 </html>

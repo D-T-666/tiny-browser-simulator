@@ -1,3 +1,5 @@
+import "./browser-sim.js";
+
 const examples = ["example-1"];
 
 for (const exampleId of examples) {
