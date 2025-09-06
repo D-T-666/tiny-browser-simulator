@@ -1,4 +1,103 @@
-import "./browser-sim.css"
+import "./browser-sim.css";
+
+const styles = `
+div.browser-sim-container {
+	&:has(.tab) .header {
+		box-sizing: border-box;
+
+		& .tabs {
+			padding: 3px 3px 0 3px;
+
+			& .tab {
+				padding: 4px 10px;
+				background: white;
+				box-sizing: border-box;
+				display: inline-block;
+				border-radius: 4px 4px 0 0;
+				position: relative;
+
+				& button {
+					background: none;
+					border: none;
+					padding: 0;
+
+					& + & {
+						margin-left: 6px;
+						color: gray;
+
+						&:hover {
+							color: black;
+						}
+					}
+				}
+
+				&.current {
+					background-color: #ddd;
+				}
+
+				&:not(.current) {
+					&+&::before {
+						content: "";
+						display: block;
+						position: absolute;
+						width: 1px;
+						height: 1.4rem;
+						background-color: #ddd;
+						left: 0;
+						top: 4px;
+					}
+
+					&:hover {
+						background-color: #eee;
+					}
+				}
+			}
+		}
+
+		& .url {
+			background-color: white;
+			border: 3px solid #ddd;
+			margin-bottom: 0;
+			padding: 2px 0.5rem;
+		}
+	}
+
+	&:has(.tab) .pages {
+		aspect-ratio: 16 / 9;
+	}
+
+	&:not(:has(.tab)) .pages {
+		&::before {
+			display: block;
+			content: "browser";
+			color: gray;
+			width: fit-content;
+			margin: auto;
+		}
+	}
+
+	& .pages {
+		overflow-y: auto;
+
+		& browser-page {
+			padding: 10px;
+			display: block;
+			position: relative;
+			box-sizing: border-box;
+
+			&:not(.current) {
+				display: none;
+			}
+		}
+	}
+}
+
+browser-link {
+	color: blue;
+	cursor: pointer;
+	text-decoration: underline;
+}
+`;
 
 class BrowserSim extends HTMLElement {
 	constructor() {
@@ -6,6 +105,13 @@ class BrowserSim extends HTMLElement {
 	}
 
 	connectedCallback() {
+		const shadow = this.attachShadow({ mode: "closed" });
+
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(styles);
+		console.log(sheet);
+		shadow.adoptedStyleSheets = [sheet];
+
 		/// Create static sub-elements
 
 		this.tabs = document.createElement("div");
@@ -24,7 +130,11 @@ class BrowserSim extends HTMLElement {
 		this.pages.innerHTML = this.innerHTML;
 		this.innerHTML = "";
 
-		this.append(header, this.pages);
+		const container = document.createElement("div");
+		container.classList.add("browser-sim-container");
+		container.append(header, this.pages);
+
+		shadow.append(container);
 
 		/// Create dynamic sub-elements
 
@@ -133,7 +243,7 @@ class BrowserLink extends HTMLElement {
 	}
 
 	click(event) {
-		this.targetBrowser.showPage(this.getAttribute("to"))
+		this.targetBrowser.showPage(this.getAttribute("url"))
 		this.targetBrowser.scrollIntoView({ block: "nearest", behavior: "smooth" });
 	}
 }
